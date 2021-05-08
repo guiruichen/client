@@ -1,0 +1,81 @@
+apply plugin: 'com.android.library'
+//apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'  //添加这两行
+group='com.github.guiruichen'  //GitHub昵称
+//group = 'com.github.wildfirechat'
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        // testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // TODO: changes this for your application if needed
+            moduleName = "mmnet"
+            //abiFilter "armeabi" //去掉armeabi架构，armeabi-v7a可以兼容armeabi架构。
+            abiFilter "armeabi-v7a"
+            abiFilter "arm64-v8a"
+            abiFilter "x86"
+            abiFilter "x86_64"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //api project(':mars-core-release')
+    def lifecycle_version = '2.0.0-beta01'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0-beta01"
+    implementation(name: 'mars-core-release', ext: 'aar')
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
+}
+
+//task makeJar(type: Copy) {
+//    delete 'build/libs/client_library.jar' //删除已经存在的jar包
+//    from('build/intermediates/aar_main_jar/release/')//从该目录下加载要打包的文件
+//    into('build/libs/')//jar包的保存目录
+//    include('classes.jar')//设置过滤，只打包classes文件
+//    rename('classes.jar', 'client.jar')//重命名，mylibrary.jar 根据自己的需求设置
+//}
+//makeJar.dependsOn(build)
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
